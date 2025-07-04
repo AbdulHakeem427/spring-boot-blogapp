@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BlogApp - Signup & Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      max-width: 400px;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    #result {
+      white-space: pre-wrap;
+      background: #eee;
+      padding: 1rem;
+      border-radius: 6px;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Sign Up</h2>
+  <form id="signupForm">
+    <label>Username:
+      <input type="text" id="signupUsername" required>
+    </label>
+    <label>Email:
+      <input type="email" id="signupEmail" required>
+    </label>
+    <label>Password:
+      <input type="password" id="signupPassword" required>
+    </label>
+    <label>Bio:
+      <input type="text" id="signupBio">
+    </label>
+    <label>Image URL:
+      <input type="text" id="signupImage">
+    </label>
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <h2>Login</h2>
+  <form id="loginForm">
+    <label>Username:
+      <input type="text" id="loginUsername" required>
+    </label>
+    <label>Password:
+      <input type="password" id="loginPassword" required>
+    </label>
+    <button type="submit">Login</button>
+  </form>
+
+  <h3>Server Response:</h3>
+  <div id="result">Waiting for response...</div>
+
+  <script>
+    const resultDiv = document.getElementById("result");
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        username: document.getElementById("signupUsername").value,
+        email: document.getElementById("signupEmail").value,
+        password: document.getElementById("signupPassword").value,
+        bio: document.getElementById("signupBio").value,
+        image: document.getElementById("signupImage").value
+      };
+      const res = await fetch("http://localhost:8086/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      resultDiv.textContent = JSON.stringify(data, null, 2);
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        username: document.getElementById("loginUsername").value,
+        password: document.getElementById("loginPassword").value
+      };
+      const res = await fetch("http://localhost:8086/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      resultDiv.textContent = JSON.stringify(data, null, 2);
+    });
+  </script>
+
+</body>
+</html>
